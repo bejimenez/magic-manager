@@ -7,7 +7,7 @@
     "lint": "turbo lint",
     "type-check": "turbo type-check",
     "clean": "turbo clean",
-    "db:generate": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > packages/database/src/types.ts"
+    "db:generate": "supabase gen types typescript --project-id vbkzzbrrvullqlcdpxhb > packages/database/src/types.ts"
   },
   "devDependencies": {
     "@turbo/gen": "^1.10.12",
