@@ -6,9 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CardSearchResult } from '@/packages/shared/src/types';
+import { CardSearchResult } from '../../../../packages/shared/src/types';
 import { Search, Plus, Check, Loader2 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -16,7 +16,6 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function CardSearch() {
   const [searchQuery, setSearchQuery] = useState('');
   const [addingCards, setAddingCards] = useState<Set<string>>(new Set());
-  const { toast } = useToast();
   
   const debouncedQuery = useDebounce(searchQuery, 400);
   
@@ -45,8 +44,7 @@ export function CardSearch() {
         throw new Error(errorData.error || 'Failed to add card');
       }
 
-      toast({
-        title: 'Card added',
+      toast.success('Card added', {
         description: `${card.name} has been added to your collection.`,
       });
       
@@ -60,10 +58,8 @@ export function CardSearch() {
         // Note: In a real app, you'd want to mutate the SWR cache here
       }
     } catch (error: any) {
-      toast({
-        title: 'Failed to add card',
+      toast.error('Failed to add card', {
         description: error.message || 'An error occurred while adding the card.',
-        variant: 'destructive',
       });
     } finally {
       setAddingCards(prev => {
@@ -72,7 +68,7 @@ export function CardSearch() {
         return newSet;
       });
     }
-  }, [data, toast]);
+  }, [data]);
 
   const renderManaSymbols = (manaCost: string) => {
     if (!manaCost) return null;

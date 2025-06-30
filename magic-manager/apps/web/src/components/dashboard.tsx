@@ -23,25 +23,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 export function Dashboard() {
   const { user, signOut } = useAuth();
-  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('search');
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      toast({
-        title: 'Signed out',
+      toast.success('Signed out', {
         description: 'Successfully signed out of your account.',
       });
     } catch (error: any) {
-      toast({
-        title: 'Sign out failed',
+      toast.error('Sign out failed', {
         description: error.message || 'Failed to sign out.',
-        variant: 'destructive',
       });
     }
   };
@@ -54,7 +50,7 @@ export function Dashboard() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Sparkles className="h-6 w-6 text-blue-600" />
-              <h1 className="text-xl font-bold">Magic Collection Manager</h1>
+              <h1 className="text-xl font-bold">Magic Manager</h1>
             </div>
             
             <div className="flex items-center gap-4">

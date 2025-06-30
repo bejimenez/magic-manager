@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from './auth-provider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { Loader2, Sparkles } from 'lucide-react';
 
 export function LoginForm() {
@@ -14,7 +15,7 @@ export function LoginForm() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { signIn } = useAuth();
-  const { toast } = useToast();
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,15 +23,16 @@ export function LoginForm() {
 
     try {
       await signIn(email, password);
-      toast({
-        title: 'Welcome back!',
+      toast.success('Welcome back!', {
         description: 'Successfully signed in to your account.',
       });
+      
+      // Refresh the page to update auth state
+      router.refresh();
     } catch (error: any) {
-      toast({
-        title: 'Sign in failed',
+      console.error('Sign in error:', error);
+      toast.error('Sign in failed', {
         description: error.message || 'Failed to sign in. Please check your credentials.',
-        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -43,7 +45,7 @@ export function LoginForm() {
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Sparkles className="h-8 w-8 text-blue-600" />
-            <h1 className="text-2xl font-bold">Magic Collection Manager</h1>
+            <h1 className="text-2xl font-bold">Magic Manager</h1>
           </div>
           <CardTitle>Sign In</CardTitle>
           <CardDescription>
@@ -62,6 +64,7 @@ export function LoginForm() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={isLoading}
+                autoComplete="email"
               />
             </div>
             <div className="space-y-2">
@@ -74,6 +77,7 @@ export function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isLoading}
+                autoComplete="current-password"
               />
             </div>
             <Button type="submit" className="w-full" disabled={isLoading}>
